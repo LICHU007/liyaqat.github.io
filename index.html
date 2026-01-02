@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liyaqat | Premium Portfolio</title>
+
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+<style>
+:root {
+  --bg: #0e0e0e;
+  --bg-alt: #141414;
+  --text: #f0f0f0;
+  --accent: #4f9cff;
+  --border: rgba(255,255,255,0.08);
+  --font-heading: 'Clash Display', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+body.light {
+  --bg: #f2f2f2;
+  --bg-alt: #ffffff;
+  --text: #111;
+  --accent: #0056d6;
+  --border: rgba(0,0,0,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: auto; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: none;
+  transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s;
+}
+
+/* --- NOISE TEXTURE (Essential for "Rich" feel) --- */
+body::before {
+  content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9000; mix-blend-mode: overlay; opacity: 0.5;
+}
+
+/* --- PRELOADER --- */
+.preloader {
+  position: fixed; inset: 0; background: #000; z-index: 10001;
+  display: flex; justify-content: center; align-items: center;
+  color: #fff; font-family: var(--font-heading); font-size: 1.5rem;
+}
+.counter { font-variant-numeric: tabular-nums; }
+
+/* --- CURSOR --- */
+.cursor {
+  position: fixed; top:0; left:0; width:12px; height:12px;
+  border-radius:50%; background:#fff; pointer-events:none;
+  transform: translate(-50%,-50%); z-index:9999; mix-blend-mode:difference;
+  transition: width 0.3s, height 0.3s, opacity 0.3s;
+}
+body.hovering .cursor { width:60px; height:60px; opacity:0.1; }
+
+/* --- NAV --- */
+.nav { position:fixed; top:0; width:100%; padding:30px 5%; display:flex; justify-content:space-between; align-items:center; z-index:1000; mix-blend-mode:difference; }
+.logo { font-family: var(--font-heading); font-weight:600; font-size:1.5rem; letter-spacing: -0.5px; }
+.nav-right { display: flex; align-items: center; gap: 30px; }
+.theme-toggle { cursor:pointer; font-size:1.1rem; opacity:0.8; }
+.menu { width:30px; cursor:pointer; display:flex; flex-direction:column; gap:6px; align-items:flex-end; }
+.menu span { display:block; height:2px; width:100%; background:#fff; transition:0.3s; }
+.menu span:nth-child(2){ width:60%; }
+.menu:hover span:nth-child(2){ width:100%; }
+
+/* --- PANEL --- */
+.panel {
+  position:fixed; top:0; right:-100%; width:100%; max-width:450px; height:100vh;
+  background:var(--bg-alt); padding:100px 50px; display:flex; flex-direction:column; gap:40px;
+  transition:right 0.8s cubic-bezier(0.7, 0, 0.3, 1); z-index:999; border-left:1px solid var(--border);
+}
+.panel.active { right:0; }
+.panel nav a { font-family:var(--font-heading); font-size:2.5rem; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border); padding:25px 0; transition:0.4s; display: block; }
+.panel nav a:hover { color:var(--accent); padding-left:20px; opacity: 0.8;}
+
+/* --- HERO & AURORA BG --- */
+.hero { height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; overflow: hidden; }
+/* Aurora Effects */
+.aurora {
+  position: absolute; top: 50%; left: 50%; width: 60vw; height: 60vw;
+  background: var(--accent); opacity: 0.15; filter: blur(100px); border-radius: 50%;
+  transform: translate(-50%, -50%); animation: auroraMove 10s infinite alternate; z-index: -1;
+}
+.aurora:nth-child(2) { width: 40vw; height: 40vw; background: purple; animation-delay: -5s; left: 30%; top: 30%; }
+@keyframes auroraMove { 0% { transform: translate(-50%, -50%) scale(1); } 100% { transform: translate(-40%, -60%) scale(1.1); } }
+
+.hero h1 { font-family:var(--font-heading); font-size:clamp(3.5rem, 9vw, 7.5rem); line-height:0.9; font-weight:600; text-transform:uppercase; letter-spacing: -2px; }
+.hero .subtitle { margin-top:25px; opacity:0.6; font-size:1.1rem; letter-spacing:1px; max-width: 400px; line-height: 1.5; }
+.hero button { margin-top:50px; padding:18px 40px; border:1px solid var(--border); border-radius:100px; background:rgba(255,255,255,0.05); backdrop-filter: blur(5px); color:var(--text); cursor:pointer; transition:0.4s; font-size: 0.95rem; }
+.hero button:hover { background:var(--text); color:var(--bg); transform: scale(1.05); }
+
+/* --- SECTIONS COMMON --- */
+.section { padding:140px 10%; position: relative; }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 80px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.section h2 { font-family:var(--font-heading); font-size:3.5rem; font-weight: 500; }
+.section-desc { max-width: 300px; opacity: 0.6; font-size: 0.9rem; text-align: right; }
+
+/* --- SKILLS --- */
+.skill-list { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:60px; }
+.skill-list span { padding:12px 24px; border:1px solid var(--border); border-radius:100px; font-size:0.95rem; transition: 0.3s; cursor: default; }
+.skill-list span:hover { border-color: var(--accent); color: var(--accent); }
+
+.skill-group { margin-bottom:40px; }
+.skill-label { display:flex; justify-content:space-between; margin-bottom:15px; font-family:var(--font-heading); font-size:1.2rem; }
+.skill-bar { height:2px; background:var(--border); position:relative; width: 100%; overflow: hidden;}
+.skill-bar-inner { position:absolute; top:0; left:0; height:100%; width:0%; background:var(--accent); }
+
+/* --- PROJECTS (HOVER REVEAL) --- */
+.projects-container { position: relative; }
+.project-list { display:flex; flex-direction:column; }
+.project-item {
+  display:flex; justify-content:space-between; align-items:center; padding:50px 0;
+  border-bottom:1px solid var(--border); cursor:pointer; transition:0.4s; position: relative; z-index: 2;
+}
+.project-item:first-child { border-top: 1px solid var(--border); }
+.project-item:hover { opacity: 0.5; padding-left: 20px; padding-right: 20px; }
+.project-item h3 { font-size:clamp(2rem, 4vw, 3.5rem); font-weight:400; font-family: var(--font-heading); }
+.project-item p { opacity:0.6; font-size: 1rem; }
+
+/* Floating Image Preview Container */
+.project-preview {
+  position: fixed; top: 0; left: 0; width: 350px; height: 250px; pointer-events: none;
+  z-index: 1; opacity: 0; visibility: hidden; transform: translate(-50%, -50%) scale(0.8);
+  overflow: hidden; border-radius: 8px; transition: transform 0.1s;
+}
+.project-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+/* --- CONTACT & FOOTER --- */
+#contact { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
+#contact h2 { font-size: clamp(3rem, 6vw, 6rem); margin-bottom: 40px; }
+#contact form { width:100%; display:flex; flex-direction:column; gap:0; }
+.form-group { position: relative; border-bottom: 1px solid var(--border); }
+.form-group input, .form-group textarea {
+  width:100%; padding:30px 0; background:transparent; border:none; color:var(--text);
+  font-family:var(--font-body); font-size:1.2rem; resize: none;
+}
+.form-group input:focus, .form-group textarea:focus { outline:none; }
+.form-group label {
+  position: absolute; top: 30px; left: 0; opacity: 0.5; transition: 0.3s; pointer-events: none;
+}
+.form-group input:focus + label, .form-group input:valid + label,
+.form-group textarea:focus + label, .form-group textarea:valid + label {
+  top: 5px; font-size: 0.8rem; opacity: 1; color: var(--accent);
+}
+
+#contact button { margin-top: 50px; padding:20px 50px; background:var(--text); color:var(--bg); border:none; font-weight:600; cursor:pointer; border-radius: 100px; align-self: flex-start; transition: 0.3s; }
+#contact button:hover { transform: scale(1.05); }
+
+footer { padding:40px 10%; display: flex; justify-content: space-between; border-top:1px solid var(--border); opacity:0.5; font-size: 0.9rem; margin-top: auto;}
+
+/* --- UTILS --- */
+::selection { background: var(--accent); color: white; }
+#backTop { position:fixed; bottom:40px; right:40px; background:transparent; border: 1px solid var(--border); color:var(--text); width: 50px; height: 50px; border-radius:50%; cursor:pointer; opacity:0; transition:0.3s; z-index:900; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+#backTop:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Responsive */
+@media(max-width: 768px) {
+  .section { padding: 80px 5%; }
+  .project-preview { display: none; } /* Disable hover image on mobile */
+  .section-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .section-desc { text-align: left; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="preloader">
+  <div class="counter">0%</div>
+</div>
+
+<div class="cursor" id="cursor"></div>
+
+<header class="nav">
+  <div class="logo">Liyaqat.</div>
+  <div class="nav-right">
+    <div class="theme-toggle magnetic" onclick="toggleTheme()">☼</div>
+    <div class="menu magnetic" id="menu" onclick="toggleMenu()"><span></span><span></span></div>
+  </div>
+</header>
+
+<div class="panel" id="panel">
+  <nav>
+    <a href="#about" onclick="toggleMenu()">About</a>
+    <a href="#skills" onclick="toggleMenu()">Skills</a>
+    <a href="#projects" onclick="toggleMenu()">Projects</a>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="aurora"></div>
+  <div class="aurora"></div>
+  
+  <h1 id="heroTitle">
+    <span>Crafting</span><br>
+    <span style="color:var(--muted)">Digital</span><br>
+    <span>Depth</span>
+  </h1>
+  <p class="subtitle">Liyaqat • Creative Developer • 2026</p>
+  <button class="magnetic">Explore Works</button>
+</section>
+
+<section id="about" class="section">
+  <div class="section-header">
+    <h2>The Vision</h2>
+    <p class="section-desc">Bridging the gap between engineering and design.</p>
+  </div>
+  <p style="font-size:clamp(1.2rem, 3vw, 2rem); line-height:1.4; max-width:1000px; opacity:0.9;">
+    I am a VHSE Web Developer student obsessed with <span style="color:var(--accent)">interaction design</span>. 
+    I don't just build websites; I build digital ecosystems that feel alive, responsive, and uniquely tailored to the user's journey.
+  </p>
+</section>
+
+<section id="skills" class="section">
+  <div class="section-header">
+    <h2>Toolkit</h2>
+    <p class="section-desc">My technical arsenal.</p>
+  </div>
+  
+  <div class="skill-list">
+    <span>HTML5 / Semantic</span><span>Advanced CSS3</span><span>Vanilla JS</span>
+    <span>React.js</span><span>GSAP Animations</span><span>Python</span><span>WebGL</span>
+  </div>
+
+  <div class="skill-group">
+    <div class="skill-label"><span>Frontend Engineering</span><span>95%</span></div>
+    <div class="skill-bar" data-percent="95%"><div class="skill-bar-inner"></div></div>
+  </div>
+  <div class="skill-group">
+    <div class="skill-label"><span>Motion Design</span><span>80%</span></div>
+    <div class="skill-bar" data-percent="80%"><div class="skill-bar-inner"></div></div>
+  </div>
+</section>
+
+<section id="projects" class="section">
+  <div class="section-header">
+    <h2>Selected Works</h2>
+    <p class="section-desc">Hover to preview.</p>
+  </div>
+  
+  <div class="projects-container">
+    <div class="project-preview">
+      <img src="" id="preview-img" alt="Project Preview">
+    </div>
+
+    <div class="project-list">
+      <div class="project-item" data-img="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=1000&auto=format&fit=crop">
+        <h3>Village Culture</h3>
+        <p>Web Dev 2025</p>
+      </div>
+      <div class="project-item" data-img="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop">
+        <h3>Neon Quiz App</h3>
+        <p>JavaScript</p>
+      </div>
+      <div class="project-item" data-img="https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1000&auto=format&fit=crop">
+        <h3>Portfolio V1</h3>
+        <p>Design System</p>
+      </div>
+      <div class="project-item" data-img="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop">
+        <h3>Agency Concept</h3>
+        <p>UI/UX</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section">
+  <h2>Let's create<br>something <span style="color:var(--accent)">iconic</span>.</h2>
+  <form id="contactForm">
+    <div class="form-group">
+      <input type="text" id="name" required>
+      <label for="name">What's your name?</label>
+    </div>
+    <div class="form-group">
+      <input type="email" id="email" required>
+      <label for="email">Your email address</label>
+    </div>
+    <div class="form-group">
+      <textarea id="msg" rows="3" required></textarea>
+      <label for="msg">Tell me about your project</label>
+    </div>
+    <button type="submit" class="magnetic">Send Message</button>
+  </form>
+</section>
+
+<footer>
+  <p>&copy; 2026 Liyaqat. Local Time: <span id="time"></span></p>
+  <p>Available for freelance</p>
+</footer>
+
+<button id="backTop">↑</button>
+
+<script>
+// --- 1. PRELOADER ---
+const counter = document.querySelector('.counter');
+let count = 0;
+const updateCounter = setInterval(() => {
+  count += Math.floor(Math.random() * 10) + 1;
+  if (count > 100) count = 100;
+  counter.innerText = count + '%';
+  if (count === 100) {
+    clearInterval(updateCounter);
+    gsap.to(".preloader", { y: "-100%", duration: 1, ease: "power4.inOut", delay: 0.5 });
+    initAnimations(); // Start site animations after load
+  }
+}, 30);
+
+// --- 2. LENIS SMOOTH SCROLL ---
+const lenis = new Lenis({duration:1.2, easing: t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+function raf(time){lenis.raf(time);requestAnimationFrame(raf);} requestAnimationFrame(raf);
+gsap.registerPlugin(ScrollTrigger); lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(t=>lenis.raf(t*1000));
+
+// --- 3. PROJECT HOVER REVEAL ---
+const preview = document.querySelector('.project-preview');
+const previewImg = document.getElementById('preview-img');
+const projects = document.querySelectorAll('.project-item');
+
+projects.forEach(project => {
+  project.addEventListener('mouseenter', () => {
+    const imgUrl = project.getAttribute('data-img');
+    previewImg.src = imgUrl;
+    gsap.to(preview, { opacity: 1, visibility: 'visible', scale: 1, duration: 0.4, ease: "power2.out" });
+  });
+  project.addEventListener('mouseleave', () => {
+    gsap.to(preview, { opacity: 0, scale: 0.8, duration: 0.4, ease: "power2.out" });
+  });
+  project.addEventListener('mousemove', (e) => {
+    // Move the preview div with cursor but slightly delayed/smoothed
+    gsap.to(preview, { x: e.clientX, y: e.clientY, duration: 0.5, ease: "power3.out" });
+  });
+});
+
+// --- 4. MAGNETIC BUTTONS (Applied to all .magnetic class) ---
+document.querySelectorAll(".magnetic").forEach(btn => {
+  btn.addEventListener("mousemove", (e) => {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - (rect.left + rect.width / 2);
+    const y = e.clientY - (rect.top + rect.height / 2);
+    gsap.to(btn, { x: x * 0.4, y: y * 0.4, duration: 0.2 });
+  });
+  btn.addEventListener("mouseleave", () => {
+    gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+  });
+});
+
+// --- 5. ANIMATIONS (Init after load) ---
+function initAnimations() {
+  // Hero Text
+  gsap.from("#heroTitle span", { y: 150, opacity: 0, duration: 1.2, stagger: 0.15, ease: "power4.out", delay: 0.8 });
+  
+  // Section Headers
+  gsap.utils.toArray(".section-header").forEach(header => {
+    gsap.from(header, { opacity: 0, y: 50, duration: 1, scrollTrigger: { trigger: header, start: "top 80%" }});
+  });
+
+  // Skill Bars
+  gsap.utils.toArray('.skill-bar').forEach(bar => {
+    gsap.fromTo(bar.querySelector('.skill-bar-inner'), {width:0}, {width:bar.dataset.percent, duration:1.5, ease:"power3.out", scrollTrigger:{trigger:bar, start:"top 85%"}}); 
+  });
+}
+
+// --- 6. UTILITIES ---
+function toggleTheme(){ document.body.classList.toggle("light"); }
+const panel = document.getElementById("panel");
+function toggleMenu(){ panel.classList.toggle("active"); }
+
+// Cursor Logic
+const cursor = document.getElementById("cursor");
+document.addEventListener("mousemove", e=> gsap.to(cursor,{x:e.clientX,y:e.clientY,duration:0.1}));
+document.querySelectorAll("a, button, .project-item, .menu, input").forEach(el=>{
+  el.addEventListener("mouseenter",()=>document.body.classList.add("hovering"));
+  el.addEventListener("mouseleave",()=>document.body.classList.remove("hovering"));
+});
+
+// Time in Footer
+setInterval(() => {
+  document.getElementById('time').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+}, 1000);
+
+// Back to Top
+const backTop=document.getElementById('backTop');
+window.addEventListener('scroll',()=>{backTop.style.opacity=window.scrollY>500?'1':'0';});
+backTop.addEventListener('click',()=>{lenis.scrollTo(0);});
+
+</script>
+</body>
+</html>
