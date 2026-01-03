@@ -1,0 +1,205 @@
+:root {
+    --neon-cyan: #00f2ff;
+    --neon-purple: #9d00ff;
+    --neon-green: #00ffc8;
+    --neon-magenta: #ff007b;
+    --glass-bg: rgba(255, 255, 255, 0.08); /* Slightly more opaque for better contrast */
+    --border-color: rgba(255, 255, 255, 0.15);
+    --text-color-light: rgba(255, 255, 255, 0.7);
+    --text-color-main: #ffffff;
+    --card-radius: 40px;
+}
+
+body {
+    margin: 0;
+    background: #050505; /* Deep dark background */
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; /* Cross-platform premium font */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Hide overflow from moving blobs */
+    color: var(--text-color-main);
+}
+
+/* --- NEON BACKGROUND BLOBS --- */
+.wallpaper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    filter: blur(80px); /* Heavy blur for the background colors */
+}
+
+.blob {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: blob-move 20s infinite alternate ease-in-out;
+}
+
+.purple { background: var(--neon-purple); top: 10%; left: 15%; animation-delay: 0s; }
+.cyan { background: var(--neon-cyan); bottom: 15%; right: 10%; animation-delay: 5s; }
+.green { background: var(--neon-green); top: 30%; right: 20%; animation-delay: 10s; }
+.magenta { background: var(--neon-magenta); bottom: 20%; left: 25%; animation-delay: 15s; }
+
+@keyframes blob-move {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, -50px) scale(1.1); }
+    50% { transform: translate(-100px, 100px) scale(0.9); }
+    75% { transform: translate(70px, 30px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+/* --- GLASS CARD CONTAINER --- */
+.glass-card-container {
+    position: relative;
+    z-index: 1; /* Ensure card is above blobs */
+    perspective: 1000px; /* For 3D transformations */
+}
+
+.glass-card {
+    width: 380px; /* Slightly larger for better mobile touch targets */
+    padding: 35px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px); /* The frosted glass effect */
+    -webkit-backdrop-filter: blur(30px); /* For Safari support */
+    border-radius: var(--card-radius);
+    border: 1.5px solid var(--border-color); /* Thicker border for definition */
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6); /* Deeper shadow for depth */
+    text-align: center;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out; /* For animations */
+}
+
+/* --- TEXT ELEMENTS --- */
+.quiz-status {
+    color: var(--text-color-light);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.question-text {
+    color: var(--text-color-main);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 30px;
+}
+
+/* --- OPTIONS CONTAINER --- */
+.options-container {
+    margin-bottom: 30px;
+}
+
+.option {
+    width: 100%;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    background: rgba(255,255,255,0.06); /* Slightly darker background for options */
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px; /* Slightly less rounded than card */
+    color: var(--text-color-main);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+.option:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.25);
+}
+
+.option.selected {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px var(--neon-cyan), inset 0 0 5px var(--neon-cyan); /* Inner glow for selected */
+    background: rgba(0, 242, 255, 0.15); /* More vibrant background for selected */
+}
+
+.option.correct {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 15px var(--neon-green), inset 0 0 5px var(--neon-green);
+    background: rgba(0, 255, 200, 0.15);
+}
+
+.option.wrong {
+    border-color: var(--neon-magenta);
+    box-shadow: 0 0 15px var(--neon-magenta), inset 0 0 5px var(--neon-magenta);
+    background: rgba(255, 0, 123, 0.15);
+}
+
+/* --- BUTTONS --- */
+.next-button, .restart-button {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.next-button {
+    background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+    color: #000; /* Text color for the gradient button */
+    box-shadow: 0 8px 20px rgba(0, 242, 255, 0.3);
+}
+
+.next-button:hover {
+    background: linear-gradient(45deg, var(--neon-green), var(--neon-cyan));
+    box-shadow: 0 10px 25px rgba(0, 255, 200, 0.4);
+    transform: translateY(-2px);
+}
+
+.restart-button {
+    background: linear-gradient(45deg, var(--neon-magenta), var(--neon-purple));
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(255, 0, 123, 0.3);
+    margin-top: 15px; /* Space between next and restart */
+}
+
+.restart-button:hover {
+    background: linear-gradient(45deg, var(--neon-purple), var(--neon-magenta));
+    box-shadow: 0 10px 25px rgba(255, 0, 123, 0.4);
+    transform: translateY(-2px);
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- RESPONSIVENESS (for phone screens) --- */
+@media (max-width: 480px) {
+    .glass-card {
+        width: 90%; /* Adjust width for smaller screens */
+        padding: 25px;
+        border-radius: 30px;
+    }
+
+    .question-text {
+        font-size: 1.4rem;
+    }
+
+    .option {
+        padding: 14px 18px;
+        font-size: 1rem;
+    }
+
+    .next-button, .restart-button {
+        padding: 16px;
+        font-size: 1.1rem;
+    }
+
+    /* Reduce blur for performance on very small devices if needed */
+    .blob { filter: blur(60px); }
+    .glass-card { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+}
+
