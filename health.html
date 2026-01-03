@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Healthcare | Nattika Heritage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================  
+           Premium Heritage Palette (Synced with Village.html)
+           ========================= */
+        :root {
+            --bg-main: #F9F7F2; 
+            --bg-section: #E5EADF; 
+            --text-primary: #1A2F15; 
+            --text-secondary: #C5A059; 
+            --glass: rgba(255, 255, 255, 0.7);
+            --card-bg: #FFFFFF;
+        }
+
+        /* ---------- RESET & BASE ---------- */
+        * { margin:0; padding:0; box-sizing:border-box; font-family:"Plus Jakarta Sans",sans-serif; scroll-behavior:smooth; }
+        body { background-color: var(--bg-main); color: var(--text-primary); line-height:1.8; overflow-x:hidden; }
+
+        /* ---------- PARTICLE CANVAS ---------- */
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6; }
+
+        /* ---------- HEADER ---------- */
+        .site-header { 
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 20px 0; 
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: sticky; top:0; z-index:1000; 
+        }
+        .header-inner { display:flex; justify-content:space-between; align-items:center; width:90%; max-width:1200px; margin:auto; }
+        .logo { font-family: 'Playfair Display', serif; font-size:2rem; font-weight:700; color: var(--text-primary); letter-spacing: -1px; text-decoration: none; }
+
+        /* ---------- HERO ---------- */
+        .hero { 
+            position:relative; 
+            text-align:center; 
+            padding:140px 20px; 
+            background: var(--text-primary); 
+            color: #fff; 
+            overflow:hidden; 
+            z-index:1; 
+        }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 7vw, 4rem); margin-bottom:15px; animation:fadeInUp 1s ease forwards; }
+        .hero p { font-size:1rem; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase; animation:fadeInUp 1.2s ease forwards; }
+
+        /* Animated Waves */
+        .wave { position:absolute; width:200%; height:100%; top:0; left:-50%; background: linear-gradient(to bottom, rgba(197, 160, 89, 0.15), transparent); opacity:0.3; z-index:0; }
+        .wave:nth-child(1) { animation:wave 15s linear infinite; }
+        .wave:nth-child(2) { animation:wave 20s linear infinite reverse; opacity:0.1; }
+        @keyframes wave { 0% { transform:translateX(0);} 100% { transform:translateX(50%);} }
+
+        /* ---------- CARDS ---------- */
+        .container { width:90%; max-width:1200px; margin:auto; padding:80px 20px; position: relative; z-index: 1; }
+        .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:40px; }
+        
+        .card {
+            background: var(--card-bg);
+            padding: 60px 40px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,0,0,0.03);
+            text-align: center;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        .card.visible { opacity:1; transform:translateY(0);}
+        .card:hover { transform: translateY(-15px); box-shadow:0 40px 80px rgba(0,0,0,0.08); border-color: var(--text-secondary); }
+
+        .card-img { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 1.2rem; 
+            color: var(--text-secondary); 
+            margin-bottom:20px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 15px; color: var(--text-primary); }
+        .card p { font-size: 0.95rem; color: #666; margin-bottom: 25px; }
+
+        .small-btn {
+            display:inline-block;
+            color: var(--text-primary);
+            font-weight:700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.75rem;
+            padding:10px 0;
+            border-bottom: 2px solid var(--text-secondary);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .small-btn:hover { color: var(--text-secondary); letter-spacing: 2px; }
+
+        /* ---------- NAVIGATION BUTTONS ---------- */
+        .back-btn {
+            display: block;
+            width: fit-content;
+            margin: 60px auto 0;
+            background: var(--text-primary);
+            color: #fff;
+            padding: 18px 45px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: 0.4s;
+        }
+        .back-btn:hover { background: var(--text-secondary); transform: translateY(-3px); }
+
+        /* ---------- FOOTER ---------- */
+        .site-footer { 
+            text-align:center; 
+            padding:60px 0; 
+            background: #fff; 
+            border-top: 1px solid #EEE; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            font-size: 0.7rem; 
+            color: #999;
+        }
+
+        @keyframes fadeInUp { 0% { opacity:0; transform:translateY(30px); } 100% { opacity:1; transform:translateY(0); } }
+    </style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a class="logo" href="index.html">Nattika</a>
+        <nav class="main-nav">
+            <a href="village.html" style="font-weight:600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px;">Home</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="wave" id="wave1"></div>
+    <div class="wave" id="wave2"></div>
+    <div class="container" style="padding:0;">
+        <h1>Healthcare & Wellness</h1>
+        <p>A Legacy of Care and Healing</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="cards">
+        <div class="card">
+            <div class="card-img">Community</div>
+            <h3>Primary Health Centre</h3>
+            <p>Essential government healthcare services dedicated to the well-being of Nattika's residents.</p>
+            <a class="small-btn" target="_blank" href="https://maps.app.goo.gl/khnR3D24f9fEnDq9A">View on Map</a>
+        </div>
+
+        <div class="card">
+            <div class="card-img">Pharmacy</div>
+            <h3>Well Pharma Medicals</h3>
+            <p>A trusted local institution providing pharmaceutical care and essential health supplies.</p>
+            <a class="small-btn" target="_blank" href="https://maps.app.goo.gl/FAc5u128ShxS9Ybg9">View on Map</a>
+        </div>
+
+        <div class="card">
+            <div class="card-img">Ayurveda</div>
+            <h3>Nattika Beach Resort</h3>
+            <p>World-renowned Ayurvedic treatments set against the serene backdrop of our coastal heritage.</p>
+            <a class="small-btn" target="_blank" href="https://maps.app.goo.gl/s1xgH2jHDrATSzpJ7">View on Map</a>
+        </div>
+    </div>
+
+    <a class="back-btn" href="village.html">← Back to Heritage</a>
+</div>
+
+<footer class="site-footer">
+    <p>© 2025 Nattika Community | Crafted for Heritage</p>
+</footer>
+
+<script>
+    // PARTICLE BACKGROUND (Synced with Village.html)
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.speedY = Math.random() * 0.5 - 0.25;
+        }
+        update() {
+            this.x += this.speedX; this.y += this.speedY;
+            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        }
+        draw() { ctx.fillStyle = 'rgba(197, 160, 89, 0.3)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+    }
+    function initParticles() { for (let i = 0; i < 80; i++) { particlesArray.push(new Particle()); } }
+    initParticles();
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particlesArray.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // SCROLL ANIMATIONS
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        if(document.getElementById("wave1")) {
+            document.getElementById("wave1").style.transform = `translateX(${scrollY * 0.1}px)`;
+            document.getElementById("wave2").style.transform = `translateX(${-scrollY * 0.08}px)`;
+        }
+
+        document.querySelectorAll('.card').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if(rect.top < window.innerHeight - 100) el.classList.add('visible');
+        });
+    });
+
+    // Trigger initial check for visible cards
+    setTimeout(() => {
+        window.dispatchEvent(new Event('scroll'));
+    }, 100);
+</script>
+
+</body>
+</html>
